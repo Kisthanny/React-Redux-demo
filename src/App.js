@@ -1,23 +1,34 @@
-import logo from './logo.svg';
 import './App.css';
-
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "./state/index";
+import { useState } from "react";
 function App() {
+  const account = useSelector((state) => state.account)
+  const dispatch = useDispatch()
+  const { deposit, withdraw } = bindActionCreators(actionCreators, dispatch)
+  const [amount, setAmount] = useState(0)
+  function handleInputChange(e) {
+    if (isNaN(parseInt(e.target.value))) {
+      setAmount(0)
+    } else {
+      setAmount(parseInt(e.target.value))
+    }
+  }
+  function handleDeposit() {
+    deposit(amount)
+    setAmount(0)
+  }
+  function handleWithdraw() {
+    withdraw(amount)
+    setAmount(0)
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h5>account: {account}</h5>
+      <input value={amount} onChange={handleInputChange} />
+      <button onClick={handleDeposit}>deposit</button>
+      <button onClick={handleWithdraw}>withdraw</button>
     </div>
   );
 }
